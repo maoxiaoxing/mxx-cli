@@ -1,0 +1,20 @@
+{
+  "name": "lt-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "bin": {
+    "ltcli": "cli.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^6.1.0",
+    "ejs": "^3.1.5",
+    "inquirer": "^7.3.3"
+  }
+}
