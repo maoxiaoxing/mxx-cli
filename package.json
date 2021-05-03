@@ -1,5 +1,5 @@
 {
-  "name": "mxx-cli",
+  "name": "@mxx/cli",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "bin": {
-    "ltcli": "cli.js"
+    "mxxcli": "cli.js"
   },
   "license": "ISC",
   "dependencies": {
