@@ -15,6 +15,7 @@ const ejs = require('ejs')
 const program = require('commander')
 const writeFileUtil = require('./utils/writeFile')
 const download = require('download-git-repo')
+const ora = require('ora')
 
 const templatesMap = new Map([
     ['vue-ts', {
@@ -84,9 +85,13 @@ program
         ])
         const { downloadUrl } = templatesMap.get(templateName)
 
+        const spinner = ora('正在下载中...')
+        spinner.start()
+
         download(downloadUrl, projectName, { clone: true }, (err) => {
             if (err) {
-                return console.log(err)
+                spinner.fail()
+                return
             }
 
             const destDir = process.cwd()
@@ -98,7 +103,8 @@ program
                     version,
                 }
             )
-            console.log('初始化模板成功！')
+            spinner.text = '初始化模板成功！'
+            spinner.succeed()
         })
         
         return
