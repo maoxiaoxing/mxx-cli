@@ -14,6 +14,25 @@ const fs = require('fs')
 const ejs = require('ejs')
 const program = require('commander')
 const writeFileUtil = require('./utils/writeFile')
+const download = require('download-git-repo')
+
+const templatesMap = new Map([
+    ['vue-ts', {
+        url: 'https://github.com/maoxiaoxing/vue-ts-template',
+        downloadUrl: 'github:maoxiaoxing/vue-ts-template#main',
+        description: 'vue2 ts 项目模板',
+    }],
+    ['vue3', {
+        url: 'https://github.com/maoxiaoxing/vue3-study',
+        downloadUrl: 'github:maoxiaoxing/vue3-study#master',
+        description: 'vue3 + vue-cli 练习项目',
+    }],
+    ['react', {
+        url: '',
+        downloadUrl: '',
+        description: 'react',
+    }],
+])
 
 program
     .version('1.0.0') // 输出版本号
@@ -29,16 +48,28 @@ program
     })
 
 program
-    .command('init <template> <project>')
-    .description('init template')
-    .action(function(templateName, projectName) {
+    .command('init')
+    .description('初始化项目')
+    .action(async () => {
         // console.log(templateName, projectName)
-        inquirer.prompt([
+        const templateNames = [...templatesMap.keys()]
+        console.log(templateNames)
+
+        const { templateName } = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'templateName',
+                message: '请选择一个模板',
+                choices: templateNames,
+            }
+        ])
+
+        const { projectName } = await inquirer.prompt([
             {
                 type: 'input',
-                name: 'name',
-                message: 'Project name?',
-                default: projectName
+                name: 'projectName',
+                message: '请为您的项目命名',
+                default: templateName,
             },
             {
                 type: 'input',
@@ -53,54 +84,15 @@ program
                 default: ''
             },
         ])
-        .then(async (answers) => {
-            console.log(answers)
-            // 根据用户回答的结果生成文件
-            const tempHash = {
-                vue: 'templates/vue',
-                react: 'templates/react',
-            }
-            let tempPath
-            try {
-                tempPath = tempHash[templateName]
-                if (!tempPath) {
-                    throw new Error(`没有【 ${templateName} 】这个模板`)
-                }
-            }
-            catch(err) {
+        const { downloadUrl } = templatesMap.get(templateName)
+
+        download(downloadUrl, projectName, { clone: true }, (err) => {
+            if (err) {
                 console.log(err)
-                process.exit() // 如果报错 终止进程
+            } else {
+                console.log('下载成功')
             }
-
-            // 模板目录
-            const tmplDir = path.join(__dirname, tempPath)            
-
-            // 目标目录
-            const destDir = process.cwd()
-
-            // 将模板下的文件全部转换到目标目录
-            fs.readdir(tmplDir, (err, files) => {
-                if (err) throw err
-                files.forEach((file) => {
-                    console.log(file)
-                    // 通过模板引擎来渲染文件
-                    ejs.renderFile(path.join(tmplDir, file), answers, (err, res) => {
-                        if (err) throw err
-
-                        fs.writeFileSync(path.join(destDir, file), res)
-                        const packageJson = path.join(destDir, 'package.json')
-                        writeFileUtil.writeJson(
-                            packageJson, 
-                            {
-                                name: answers.name,
-                                version: answers.version
-                            }
-                        )                    
-                    })
-                })
-            })
         })
-
     })
 
 program.parse(process.argv)
