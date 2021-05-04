@@ -48,7 +48,7 @@ program
     })
 
 program
-    .command('init')
+    .command('init') 
     .description('初始化项目')
     .action(async () => {
         const templateNames = [...templatesMap.keys()]
