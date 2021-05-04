@@ -41,10 +41,10 @@ program
     .command('list')
     .description('查看所有模板')
     .action(function() {
-        console.log(`
-            vue => vue模板
-            react => react模板
-        `)
+        for(const [templateName, templateInfo] of templatesMap.entries()) {
+            const templateItem = chalk.gray(`${templateName} --- ${templateInfo.description}`)
+            console.log(templateItem)
+        }
     })
 
 program
