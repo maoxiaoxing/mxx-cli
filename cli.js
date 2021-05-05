@@ -15,6 +15,7 @@ const writeFileUtil = require('./utils/writeFile')
 const download = require('download-git-repo')
 const ora = require('ora')
 const chalk = require('chalk')
+const fs = require('fs')
 
 const templatesMap = new Map([
     ['vue-ts', {
@@ -34,8 +35,11 @@ const templatesMap = new Map([
     }],
 ])
 
+const pjsonPath = path.join(__dirname, 'package.json')
+const pjson = JSON.parse(fs.readFileSync(pjsonPath, 'utf-8'))
+
 program
-    .version('1.0.0') // 输出版本号
+    .version(pjson.version, '-v, --version') // 输出版本号
 
 program
     .command('list')
@@ -74,12 +78,6 @@ program
                 name: 'version',
                 message: 'Project version?',
                 default: '1.0.0'
-            },
-            {
-                type: 'input',
-                name: 'description',
-                message: 'Project description?',
-                default: ''
             },
         ])
         const { downloadUrl } = templatesMap.get(templateName)
