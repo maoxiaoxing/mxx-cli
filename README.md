@@ -5,6 +5,9 @@
 ## 使用方式
 
 ```bash
+# 全局下载
+npm install mxxcli -g
+
 # 查看脚手架版本
 mxxcli -v
 
