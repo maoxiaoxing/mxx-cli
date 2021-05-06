@@ -16,16 +16,20 @@ const download = require('download-git-repo')
 const ora = require('ora')
 const chalk = require('chalk')
 const fs = require('fs')
+const os = require('os')
+const tools = require('./utils/tools')
+
+const prefix = tools.isWindows() ? 'github' : 'https://github.com'
 
 const templatesMap = new Map([
     ['vue-ts', {
         url: 'https://github.com/maoxiaoxing/vue-ts-template',
-        downloadUrl: 'github:maoxiaoxing/vue-ts-template#main',
+        downloadUrl: `${prefix}:maoxiaoxing/vue-ts-template#main`,
         description: 'vue2 ts 项目模板',
     }],
     ['vue3', {
         url: 'https://github.com/maoxiaoxing/vue3-study',
-        downloadUrl: 'github:maoxiaoxing/vue3-study#master',
+        downloadUrl: `${prefix}:maoxiaoxing/vue3-study#master`,
         description: 'vue3 + vue-cli 练习项目',
     }],
     ['react', {
