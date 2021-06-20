@@ -1,6 +1,6 @@
 {
   "name": "mxx-cli",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,9 @@
   "author": "",
   "bin": {
     "mxxcli": "cli.js"
+  },
+  "directories": {
+    "lib": "lib"
   },
   "license": "ISC",
   "dependencies": {
