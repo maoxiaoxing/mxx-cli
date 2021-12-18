@@ -7,6 +7,7 @@ const path = require('path')
 const ejs = require('ejs')
 const writeFileAsync = util.promisify(fs.writeFile)
 const chalk = require('chalk')
+const { resolve } = require('path')
 
 // 判断是否是 Windows 系统
 const isWindows = () => {
@@ -23,7 +24,34 @@ const removeFile = (file) => {
   return new Promise((resolve, reject) => {
     const cmd = spawn('rm', ['-rf', file])
     cmd.on('close', (code) => {
-      if (code != 0) {
+      if (code !== 0) {
+        process.exit(1)
+      }
+      resolve(1)
+    })
+  })
+}
+
+/**
+ * 下载模板依赖
+ * @param {模板名称} templateName 
+ * @param {依赖路径} dest 
+ * @param {模板信息} templatesMap 
+ * @returns 
+ */
+const downloadDependencies = (templateName, dest, templatesMap) => {
+  const templateConfig = templatesMap.get(templateName)
+  const registry = templateConfig && templateConfig.registry || ''
+  return new Promise((resolve, reject) => {
+    const cmd = spawn(
+      'npm', ['install', registry],
+      {
+        stdio: 'inherit',
+        cwd: dest,
+      }
+    )
+    cmd.on('close', (code) => {
+      if (code !== 0) {
         process.exit(1)
       }
       resolve(1)
@@ -32,3 +60,4 @@ const removeFile = (file) => {
 }
 
 exports.isWindows = isWindows
+exports.removeFile = removeFile
