@@ -67,11 +67,11 @@ const downloadDependencies = (templateName, dest, templatesMap) => {
  */
 const jsonToTemplateMap = (obj) => {
   const strMap = new Map()
-  const prefix = 'https://github.com/'
+  const prefix = 'https://github.com'
   for (const k of Object.keys(obj)) {
     strMap.set(k, {
       ...obj[k],
-      downloadUrl: `${prefix}maoxiaoxing/mxx-cli-templates#${k}`
+      downloadUrl: `${prefix}:maoxiaoxing/mxx-cli-templates#${k}`
     })
   }
   return strMap
@@ -83,14 +83,18 @@ const jsonToTemplateMap = (obj) => {
 const getTemplateMap = async () => {
   const destDir = process.cwd()
   await removeFile(`${destDir}/_template`)
-  const url = 'https://github.com/maoxiaoxing/mxx-cli-templates#master'
+  const url = 'https://gitee.com:maoxiaoxing/mxx-cli-templates#main'
   const readAsync = util.promisify(fs.readFile)
+  // console.log(123)
   return new Promise((resolve, reject) => {
     download(url, '_template', { clone: true }, async (err) => {
       if (err) {
         return reject(err)
       }
-      const data = await readAsync(path.join(`${destDir}/_tempalte/template-config.json`))
+      // console.log(456)
+      // console.log(path.join(`${destDir}/_tempalte/template-config.json`))
+      const data = await readAsync(path.join(`${destDir}\\_template\\template-config.json`))
+      // console.log('data', data)
       const resultString = data.toString()
       const resultJson = JSON.parse(resultString)
       const tempaltesMap = jsonToTemplateMap(resultJson)
